@@ -17,14 +17,17 @@
 package com.google.ai.sample
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -38,14 +41,19 @@ import com.google.ai.sample.util.NotificationBackground
 
 class MainActivity : ComponentActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val enabled = NotificationManagerCompat.getEnabledListenerPackages(this).contains(
             "com.element.ai"
         )
+
+//        ActivityCompat.requestPermissions(this, listOf(Manifest.permission), 23)
+
         if(!enabled){
             startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
         }
+
 
 
         setContent {
