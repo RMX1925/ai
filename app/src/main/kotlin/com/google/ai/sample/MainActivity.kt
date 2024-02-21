@@ -16,13 +16,18 @@
 
 package com.google.ai.sample
 
+import android.Manifest
+import android.app.Instrumentation.ActivityResult
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -32,31 +37,43 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.ai.sample.feature.askai.AskRoute
 import com.google.ai.sample.feature.chat.ChatRoute
 import com.google.ai.sample.feature.multimodal.PhotoReasoningRoute
 import com.google.ai.sample.feature.text.SummarizeRoute
 import com.google.ai.sample.ui.theme.GenerativeAISample
-import com.google.ai.sample.util.NotificationBackground
 
+@OptIn(ExperimentalPermissionsApi::class)
 class MainActivity : ComponentActivity() {
 
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val enabled = NotificationManagerCompat.getEnabledListenerPackages(this).contains(
-            "com.element.ai"
+
+        val enabledListeners = Settings.Secure.getString(
+            this.contentResolver,
+            "enabled_notification_listeners"
         )
 
-//        ActivityCompat.requestPermissions(this, listOf(Manifest.permission), 23)
-
-        if(!enabled){
+        if(!enabledListeners.contains("com.elements.ai")){
             startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
         }
+
+        Log.d(TAG, "onCreate: " + "Getting for permission")
+        ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.MANAGE_EXTERNAL_STORAGE)
+        ActivityCompat.requestPermissions(this,
+            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE), 0)
+
 
 
 
         setContent {
+            val permission = rememberPermissionState(permission = Manifest.permission.MANAGE_EXTERNAL_STORAGE)
+            val requestPermissionLauncher = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) {isGranted ->
+
+
+            }
             GenerativeAISample {
                 // A surface container using the 'background' color from the theme
                 Surface(
