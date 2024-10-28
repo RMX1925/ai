@@ -8,7 +8,6 @@ This Android app automatically replies to WhatsApp notifications containing the 
 - [Setup](#setup)
 - [Build and Run](#build-and-run)
 - [Features](#features)
-- [Screenshots](#screenshots)
 - [Documentation](#documentation)
 - [License](#license)
 
@@ -38,9 +37,6 @@ This Android app automatically replies to WhatsApp notifications containing the 
 - **Text Generation**: Utilizes the Gemini AI model to generate text responses.
 - **Accessibility Service**: Uses an accessibility service to read and respond to notifications.
 
-## Screenshots
-
-<img src="screenshots/screenshots.png" alt="Screenshot">
 
 ## Documentation
 
